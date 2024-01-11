@@ -1,0 +1,2 @@
+class MovieWriter < ApplicationRecord
+end
