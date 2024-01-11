@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  awards: MyString
+  imdb_id: MyString
+  imdb_rating: MyString
+  imdb_votes: MyString
+  media_type: MyString
+  metascore: MyString
+  plot: MyText
+  poster: MyText
+  rated: MyString
+  released: MyString
+  runtime: MyString
+  title: MyString
+  total_seasons: MyString
+  year: 1
+
+two:
+  awards: MyString
+  imdb_id: MyString
+  imdb_rating: MyString
+  imdb_votes: MyString
+  media_type: MyString
+  metascore: MyString
+  plot: MyText
+  poster: MyText
+  rated: MyString
+  released: MyString
+  runtime: MyString
+  title: MyString
+  total_seasons: MyString
+  year: 1
