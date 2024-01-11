@@ -1,0 +1,2 @@
+class MovieCountry < ApplicationRecord
+end
