@@ -3,16 +3,16 @@ require 'net/http'
 
 namespace :omdb do
   # Method to save actors to the database
-  def save_actors(actors, imdb_id)
+  def save_actors(actors, id)
     puts "Saving Actors..."
     actors.each do |actor|
       new_actor = MovieActor.new
       new_actor.name = actor
-      new_actor.imdb_movie_id = imdb_id
+      new_actor.movie_id = id
 
       if new_actor.save
         # Print specific attributes of new_actor
-        puts "Actor Name: #{new_actor.name}, IMDb Movie ID: #{new_actor.imdb_movie_id}"
+        puts "Actor Name: #{new_actor.name}, IMDb Movie ID: #{new_actor.movie_id}"
       else
         puts new_actor.errors.full_messages
       end
@@ -20,16 +20,16 @@ namespace :omdb do
   end
 
   # Method to save countries to the database
-  def save_countries(countries, imdb_id)
+  def save_countries(countries, id)
     puts "Saving Countries..."
     countries.each do |country|
       new_country = MovieCountry.new
       new_country.name = country
-      new_country.imdb_movie_id = imdb_id
+      new_country.movie_id = id
 
       if new_country.save
         # Print specific attributes of new_country
-        puts "Country Name: #{new_country.name}, IMDb Movie ID: #{new_country.imdb_movie_id}"
+        puts "Country Name: #{new_country.name}, IMDb Movie ID: #{new_country.movie_id}"
       else
         puts new_country.errors.full_messages
       end
@@ -37,16 +37,16 @@ namespace :omdb do
   end
 
   # Method to save directors to the database
-  def save_directors(directors, imdb_id)
+  def save_directors(directors, id)
     puts "Saving Directors..."
     directors.each do |director|
       new_director = MovieDirector.new
       new_director.name = director
-      new_director.imdb_movie_id = imdb_id
+      new_director.movie_id = id
 
       if new_director.save
         # Print specific attributes of new_director
-        puts "Director Name: #{new_director.name}, IMDb Movie ID: #{new_director.imdb_movie_id}"
+        puts "Director Name: #{new_director.name}, IMDb Movie ID: #{new_director.movie_id}"
       else
         puts new_director.errors.full_messages
       end
@@ -54,16 +54,16 @@ namespace :omdb do
   end
 
   # Method to save genres to the database
-  def save_genres(genres, imdb_id)
+  def save_genres(genres, id)
     puts "Saving Genres..."
     genres.each do |genre|
       new_genre = MovieGenre.new
       new_genre.genre = genre
-      new_genre.imdb_movie_id = imdb_id
+      new_genre.movie_id = id
 
       if new_genre.save
         # Print specific attributes of new_genre
-        puts "Genre: #{new_genre.genre}, IMDb Movie ID: #{new_genre.imdb_movie_id}"
+        puts "Genre: #{new_genre.genre}, IMDb Movie ID: #{new_genre.movie_id}"
       else
         puts new_genre.errors.full_messages
       end
@@ -71,16 +71,16 @@ namespace :omdb do
   end
 
   # Method to save writers to the database
-  def save_writers(writers, imdb_id)
+  def save_writers(writers, id)
     puts "Saving Writers..."
     writers.each do |writer|
       new_writer = MovieWriter.new
       new_writer.name = writer
-      new_writer.imdb_movie_id = imdb_id
+      new_writer.movie_id = id
 
       if new_writer.save
         # Print specific attributes of new_writer
-        puts "Writer Name: #{new_writer.name}, IMDb Movie ID: #{new_writer.imdb_movie_id}"
+        puts "Writer Name: #{new_writer.name}, IMDb Movie ID: #{new_writer.movie_id}"
       else
         puts new_writer.errors.full_messages
       end
@@ -90,7 +90,7 @@ namespace :omdb do
   # Method to save movie details to the database
   def save_movie_details(movie_details)
     awards = movie_details['Awards']
-    imdb_id = movie_details['imdbID']
+    id = movie_details['imdbID']
     imdb_rating = movie_details['imdbRating']
     imdb_votes = movie_details['imdbVotes']
     media_type = movie_details['Type']
@@ -107,7 +107,7 @@ namespace :omdb do
     new_movie = Movie.new
 
     new_movie.awards = awards
-    new_movie.imdb_id = imdb_id
+    new_movie.id = id
     new_movie.imdb_rating = imdb_rating
     new_movie.imdb_votes = imdb_votes
     new_movie.media_type = media_type
@@ -122,7 +122,7 @@ namespace :omdb do
 
     if new_movie.save
       # Print specific attributes of new_movie
-      puts "Title: #{new_movie.title}, IMDb ID: #{new_movie.imdb_id}"
+      puts "Title: #{new_movie.title}, IMDb ID: #{new_movie.id}"
     else
       puts new_movie.errors.full_messages
     end
@@ -130,11 +130,11 @@ namespace :omdb do
 
   # Method to fetch movie details from the OMDB API
   def fetch_movie_details(movie, api_url)
-    imdb_id = movie['imdbID']
+    id = movie['imdbID']
 
-    puts "Fetching movie details with imdb_id: #{imdb_id}"
+    puts "Fetching movie details with id: #{id}"
 
-    url_params = URI.encode_www_form(i: imdb_id)
+    url_params = URI.encode_www_form(i: id)
     url = "#{api_url}&#{url_params}"
     uri = URI(url)
 
@@ -193,17 +193,17 @@ namespace :omdb do
         countries = movie_details['Country'].split(', ')
         directors = movie_details['Director'].split(', ')
         genres = movie_details['Genre'].split(', ')
-        imdb_id = movie_details['imdbID']
+        id = movie_details['imdbID']
         languages = movie_details['Language'].split(', ')
         writers = movie_details['Writer'].split(', ')
 
-        puts "Movie Count: #{movie_counter}"
+        puts "Movie Count: #{movie_counter} for #{search_str}"
 
-        save_actors(actors, imdb_id)
-        save_countries(countries, imdb_id)
-        save_directors(directors, imdb_id)
-        save_genres(genres, imdb_id)
-        save_writers(writers, imdb_id)
+        save_actors(actors, id)
+        save_countries(countries, id)
+        save_directors(directors, id)
+        save_genres(genres, id)
+        save_writers(writers, id)
 
         puts "Saving Movie..."
         save_movie_details(movie_details)

@@ -2,7 +2,7 @@
 
 one:
   awards: MyString
-  imdb_id: MyString
+  id: MyString
   imdb_rating: MyString
   imdb_votes: MyString
   media_type: MyString
@@ -18,7 +18,7 @@ one:
 
 two:
   awards: MyString
-  imdb_id: MyString
+  id: MyString
   imdb_rating: MyString
   imdb_votes: MyString
   media_type: MyString
