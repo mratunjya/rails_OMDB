@@ -2,8 +2,8 @@
 
 one:
   name: MyString
-  imdb_movie_id: MyString
+  movie_id: MyString
 
 two:
   name: MyString
-  imdb_movie_id: MyString
+  movie_id: MyString

@@ -2,8 +2,8 @@
 
 one:
   genre: MyString
-  imdb_movie_id: MyString
+  movie_id: MyString
 
 two:
   genre: MyString
-  imdb_movie_id: MyString
+  movie_id: MyString
