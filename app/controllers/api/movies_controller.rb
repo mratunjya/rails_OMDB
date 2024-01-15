@@ -15,10 +15,13 @@ class Api::MoviesController < ApplicationController
 
     total_count = movies.count
 
+    if page * per_page - total_count >= 8
+      render json: {error: "No movies present on page: #{page}", total_count: total_count}
+      return
+    end
+
     movies = movies.offset((page - 1) * per_page)
                     .limit(per_page)
-
-    output = []
 
     output = movies.map do |movie|
       actors = MovieActor.where(movie_id: movie.id).pluck(:name)
