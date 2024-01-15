@@ -5,9 +5,18 @@ class Api::MoviesController < ApplicationController
     genre = params[:genre].present? ? "%#{params[:genre].split('').join('%')}%" : "%"
     released = params[:released].present? ? "%#{params[:released].split('').join('%')}%" : "%"
 
+    page = params[:page].present? ? params[:page].to_i : 1
+    per_page = 8
+
     movies = Movie
               .left_joins(:movie_actor, :movie_genre)
               .where('movies.title LIKE ? AND movies.released LIKE ? AND movie_actors.name LIKE ? AND movie_genres.genre LIKE ?', title, released, actor, genre)
+              .distinct
+
+    total_count = movies.count
+
+    movies = movies.offset((page - 1) * per_page)
+                    .limit(per_page)
 
     output = []
 
@@ -34,6 +43,6 @@ class Api::MoviesController < ApplicationController
       }
     end
 
-    render json: output
+    render json: { movies: output, total_count: total_count }
   end
 end
