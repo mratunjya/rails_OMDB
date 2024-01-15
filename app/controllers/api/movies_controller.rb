@@ -10,27 +10,26 @@ class Api::MoviesController < ApplicationController
 
     movies_query = Movie
                     .left_joins(:movie_actor, :movie_genre)
-                    .where('movies.title LIKE ? AND movies.released LIKE ? AND movie_actors.name LIKE ? AND movie_genres.genre LIKE ?', "%#{params[:title]}%", "%#{params[:released]}%", "%#{params[:actor]}%", "%#{params[:genre]}%")
+                    .includes(:movie_actor, :movie_genre)
+                    .where('movies.title LIKE ? AND movies.released LIKE ? AND movie_actors.name LIKE ? AND movie_genres.genre LIKE ?', title, released, actor, genre)
                     .distinct
 
     total_count = movies_query.count
 
     if page * per_page - total_count >= per_page
-      render json: { error: "No movies present on page: #{page}", total_count: total_count }
+      render json: { error: "No movie present on page: #{page}", total_count: total_count }
       return
     end
 
     movies = movies_query
               .offset((page - 1) * per_page)
               .limit(per_page)
-              .includes(:movie_actor, :movie_genre)
-    return
 
     output = movies.map do |movie|
       {
         actors: movie.movie_actor.pluck(:name),
         awards: movie.awards,
-        genre: movie.movie_genre.pluck(:genre),
+        genres: movie.movie_genre.pluck(:genre),
         imdb_rating: movie.imdb_rating,
         imdb_votes: movie.imdb_votes,
         media_type: movie.media_type,
