@@ -14,9 +14,47 @@
  *= require_self
  */
 
-body {
+
+:root {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  font-style: normal;
+  font-optical-sizing: auto;
+}
+
+* {
   margin: 0;
   padding: 0;
+  line-height: 1.5;
   box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+  transition: all 0.1s ease-in-out;
+  -o-transition: all 0.1s ease-in-out;
+  -ms-transition: all 0.1s ease-in-out;
+  -moz-transition: all 0.1s ease-in-out;
+  -webkit-transition: all 0.1s ease-in-out;
 }
+
+body {
+  background-color: #eee;
+
+  .wrapper {
+    width: 86.67%;
+    margin: 0 auto;
+    max-width: 90rem;
+  }
+}
+
+.f-w-500 {
+  font-weight: 500;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.object-fit-contain {
+  object-fit: contain !important;
+}
+
+@import "navbar";
