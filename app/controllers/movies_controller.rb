@@ -60,6 +60,14 @@ class MoviesController < ApplicationController
     end
 
     def show
-        @movie = Movie.find(params[:id])
+        @movie = Movie.find_by(id: params[:id])
+
+        if @movie
+            @movie_actor_names = @movie.movie_actor.pluck(:name)
+            @movie_actor_generes = @movie.movie_genre.pluck(:genre)
+        else
+            flash[:alert] = "Movie not found with ID #{params[:id]}"
+            redirect_to movies_path
+        end
     end
 end

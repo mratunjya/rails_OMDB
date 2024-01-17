@@ -5,7 +5,7 @@
             <%= link_to movie_path(id: movie[:id]) do %>
                 <div class="movie-card">
                     <% if movie[:poster] != "N/A" %>
-                        <img src="<%= movie[:poster] %>" draggable="false">
+                        <%= image_tag (movie[:poster]), draggable: false %>
                     <% else %>
                         <%= image_tag ("no-image.png"), class: "object-fit-contain", draggable: false %>
                     <% end %>

@@ -38,7 +38,28 @@
 }
 
 body {
+  position: relative;
   background-color: #eee;
+
+  .back-btn {
+    left: 30px;
+    top: 100px;
+    width: 50px;
+    color: #fff;
+    display: flex;
+    font-size: 25px;
+    position: fixed;
+    font-weight: bold;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    align-items: center;
+    -o-border-radius: 50%;
+    -ms-border-radius: 50%;
+    justify-content: center;
+    -moz-border-radius: 50%;
+    background-color: #333333;
+    -webkit-border-radius: 50%;
+  }
 
   .wrapper {
     width: 86.67%;
@@ -48,8 +69,8 @@ body {
 }
 
 a {
-  text-decoration: none;
   color: unset;
+  text-decoration: none;
 }
 
 .f-w-500 {
@@ -64,5 +85,6 @@ a {
   object-fit: contain !important;
 }
 
-@import "movies/index";
 @import "navbar";
+@import "movies/index";
+@import "movies/show";

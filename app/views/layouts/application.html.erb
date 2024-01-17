@@ -12,6 +12,8 @@
 
   <body>
     <%= render partial: 'layouts/navbar' %>
+    <%= link_to '←', :back, class: 'back-btn' %>
+
     <% if notice %>
       <p class="notice"><%= notice %></p>
     <% end %>
