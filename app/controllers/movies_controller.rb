@@ -1,9 +1,14 @@
 class MoviesController < ApplicationController
     def index
-        title = params[:title].present? ? "%#{params[:title].split('').join('%')}%" : "%"
-        actor = params[:actor].present? ? "%#{params[:actor].split('').join('%')}%" : "%"
-        genre = params[:genre].present? ? "%#{params[:genre].split('').join('%')}%" : "%"
-        released = params[:released].present? ? "%#{params[:released].split('').join('%')}%" : "%"
+        @title = params[:title]
+        @actor = params[:actor]
+        @genre = params[:genre]
+        @released = params[:released]
+
+        title = @title.present? ? "%#{@title.split('').join('%')}%" : "%"
+        actor = @actor.present? ? "%#{@actor.split('').join('%')}%" : "%"
+        genre = @genre.present? ? "%#{@genre.split('').join('%')}%" : "%"
+        released = @released.present? ? "%#{@released.split('').join('%')}%" : "%"
 
         page = params[:page].present? ? params[:page].to_i : 1
         per_page = 8
@@ -26,6 +31,7 @@ class MoviesController < ApplicationController
                 .limit(per_page)
 
         @movies = movies_query.map do |movie| {
+            id: movie.id,
             actors: movie.movie_actor.pluck(:name),
             awards: movie.awards,
             genres: movie.movie_genre.pluck(:genre),
@@ -51,5 +57,9 @@ class MoviesController < ApplicationController
         if page * per_page < total_count
             @next_page = page + 1
         end
+    end
+
+    def show
+        @movie = Movie.find(params[:id])
     end
 end
