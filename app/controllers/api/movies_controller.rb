@@ -1,9 +1,4 @@
 class Api::MoviesController < ApplicationController
-  # Generates a wildcard string for SQL LIKE queries.
-  def wildcard_string_generator(str)
-    str&.strip&.split('')&.join('%') || "%"
-  end
-
   # GET /api/movies
   # Retrieves a list of movies based on specified parameters.
   def index
@@ -15,27 +10,34 @@ class Api::MoviesController < ApplicationController
     per_page = 8
 
     # Build the movie query with left joins and search conditions
-    movies_query = Movie
-                    .left_joins(:movie_actors, :movie_genres)
-                    .where('movies.title LIKE ? AND movies.released LIKE ? AND movie_actors.name LIKE ? AND movie_genres.genre LIKE ?', title, released, actor, genre)
-                    .distinct
+    movies_query = Movie.left_joins(:movie_actors, :movie_genres)
+                      .where('movies.title LIKE ? AND movies.released LIKE ? AND movie_actors.name LIKE ? AND movie_genres.genre LIKE ?', title, released, actor, genre)
+                      .distinct
 
-    # Get the total count of movies
-    total_movies_count = movies_query.count
-
-    # Check if the requested page is out of bounds
-    if page * per_page - total_movies_count >= per_page
-      render json: { error: "No movie present on page: #{page}", total_movies_count: total_movies_count }
-      return
-    end
-
-    # Fetch paginated movies with necessary associations loaded
-    movies = movies_query
-              .offset((page - 1) * per_page)
-              .limit(per_page)
+    # Paginate the movies and load necessary associations
+    movies = movies_query.offset((page - 1) * per_page).limit(per_page)
 
     # Prepare the output JSON using a concise format
-    output = movies.map do |movie|
+    output = prepare_movie_output(movies)
+
+    # Render the final JSON response
+    render json: { movies: output, page: page, max_movies_per_page: per_page, total_movies_count: movies_query.count }
+  end
+
+  private
+
+  # Generates a wildcard string for SQL LIKE queries.
+  def wildcard_string_generator(str)
+    str = str&.strip
+
+    return "%" if str.nil? || str.empty?
+
+    "%#{str.split('').join('%')}%"
+  end
+
+  # Prepare the output JSON using a concise format
+  def prepare_movie_output(movies)
+    movies.map do |movie|
       {
         actors: movie.movie_actors.pluck(:name),
         awards: movie.awards,
@@ -61,8 +63,5 @@ class Api::MoviesController < ApplicationController
         year: movie.year
       }
     end
-
-    # Render the final JSON response
-    render json: { movies: output, page: page, total_movies_count: total_movies_count }
   end
 end
