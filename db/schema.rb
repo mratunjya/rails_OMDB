@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_11_083621) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_17_172716) do
   create_table "movie_actors", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "movie_id"
@@ -19,7 +19,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_11_083621) do
   end
 
   create_table "movie_countries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
+    t.string "country"
     t.string "movie_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -39,6 +39,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_11_083621) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "movie_languages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "language"
+    t.string "movie_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "movie_ratings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "source"
+    t.string "value"
+    t.string "movie_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "movie_writers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "movie_id"
@@ -50,7 +65,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_11_083621) do
     t.string "awards"
     t.string "imdb_rating"
     t.string "imdb_votes"
-    t.string "media_type"
     t.string "metascore"
     t.text "plot"
     t.text "poster"
@@ -58,10 +72,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_11_083621) do
     t.string "released"
     t.string "runtime"
     t.string "title"
-    t.string "total_seasons"
     t.integer "year"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "box_office"
+    t.string "dvd_release"
+    t.string "production"
+    t.string "website"
   end
 
   create_table "users", primary_key: "email", id: :string, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
