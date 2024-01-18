@@ -1,4 +1,8 @@
 class Api::MoviesController < ApplicationController
+  # Ensures that only authenticated users can access the movie-related endpoints.
+  before_action :authenticate_user!
+
+
   # GET /api/movies
   # Retrieves a list of movies based on specified parameters.
   def index
