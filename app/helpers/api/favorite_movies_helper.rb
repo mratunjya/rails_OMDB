@@ -1,0 +1,2 @@
+module Api::FavoriteMoviesHelper
+end

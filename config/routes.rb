@@ -15,6 +15,12 @@ Rails.application.routes.draw do
     # Define movies resource with only the index action
     # This will create routes like /api/movies (GET)
     resources :movies,  only: [:index]
-  end
 
+    # Define favorite_movies resource with only the index, toggle_favorite action
+    # This will create routes like /api/favorite_movies (GET)
+    #                              /api/favorite_movies/toggle_favorite (POST)
+    resources :favorite_movies, only: [:index] do
+      post 'toggle_favorite', on: :collection
+    end
+  end
 end
