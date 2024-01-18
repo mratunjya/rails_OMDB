@@ -1,151 +1,13 @@
-# OMDB Namespace
-# This namespace includes tasks and methods for interacting with the OMDB API and storing movie details in the database.
-
 require 'json'
 require 'net/http'
 
 namespace :omdb do
-  # Method to save actors to the database
-  def save_actors(actors, movie_id)
-    # Saves the list of actors for a given movie to the database
-    # Params:
-    # - actors: Array of actor names
-    # - movie_id: IMDB ID of the movie
-
-    puts "Saving Actors..."
-    actors.each do |actor|
-      new_actor = MovieActor.new
-      new_actor.name = actor
-      new_actor.movie_id = movie_id
-
-      new_actor.save
-    end
-  end
-
-  # Method to save countries to the database
-  def save_countries(countries, movie_id)
-    # Saves the list of countries for a given movie to the database
-    # Params:
-    # - countries: Array of country names
-    # - movie_id: IMDB ID of the movie
-
-    puts "Saving Countries..."
-    countries.each do |country|
-      new_country = MovieCountry.new
-      new_country.country = country
-      new_country.movie_id = movie_id
-
-      new_country.save
-    end
-  end
-
-  # Method to save directors to the database
-  def save_directors(directors, movie_id)
-    # Saves the list of directors for a given movie to the database
-    # Params:
-    # - directors: Array of director names
-    # - movie_id: IMDB ID of the movie
-
-    puts "Saving Directors..."
-    directors.each do |director|
-      new_director = MovieDirector.new
-      new_director.name = director
-      new_director.movie_id = movie_id
-
-      new_director.save
-    end
-  end
-
-  # Method to save genres to the database
-  def save_genres(genres, movie_id)
-    # Saves the list of genres for a given movie to the database
-    # Params:
-    # - genres: Array of genre names
-    # - movie_id: IMDB ID of the movie
-
-    puts "Saving Genres..."
-    genres.each do |genre|
-      new_genre = MovieGenre.new
-      new_genre.genre = genre
-      new_genre.movie_id = movie_id
-
-      new_genre.save
-    end
-  end
-
-  def save_languages(languages, movie_id)
-    # Saves the list of languages for a given movie to the database
-    # Params:
-    # - languages: Array of language names
-    # - movie_id: IMDB ID of the movie
-
-    puts "Saving Languages..."
-    languages.each do |language|
-      new_language = MovieLanguage.new
-      new_language.language = language
-      new_language.movie_id = movie_id
-
-      new_language.save
-    end
-  end
-
-  def save_ratings(ratings, movie_id)
-    # Saves the list of ratings for a given movie to the database
-    # Params:
-    # - ratings: Array of rating details (Source and Value)
-    # - movie_id: IMDB ID of the movie
-
-    puts "Saving Ratings..."
-    ratings.each do |rating|
-      new_rating = MovieRating.new
-      new_rating.source = rating['Source']
-      new_rating.value = rating['Value']
-      new_rating.movie_id = movie_id
-
-      new_rating.save
-    end
-  end
-
-  # Method to save writers to the database
-  def save_writers(writers, movie_id)
-    # Saves the list of writers for a given movie to the database
-    # Params:
-    # - writers: Array of writer names
-    # - movie_id: IMDB ID of the movie
-
-    puts "Saving Writers..."
-    writers.each do |writer|
-      new_writer = MovieWriter.new
-      new_writer.name = writer
-      new_writer.movie_id = movie_id
-
-      new_writer.save
-    end
-  end
-
-  # Method to fetch movie details from the OMDB API
-  def fetch_movie_details(imdb_id)
-    # Fetches movie details from the OMDB API using the provided IMDB ID
-    # Params:
-    # - imdb_id: IMDB ID of the movie to fetch details for
-    # Returns: Hash containing movie details
-
-    api_url = ENV['api_url']
-    url_params = URI.encode_www_form(i: imdb_id)
-
-    url = "#{api_url}&#{url_params}"
-    uri = URI.parse(url)
-    response = Net::HTTP.get_response(uri)
-
-    return JSON.parse(response.body)
-  end
-
   # Rake task to save a list of movies to the database
   desc 'This task file is used to save and store the list of top 100 movies using OMDB API'
-  task save_top_100_movies_to_db: [:environment, :omdb_api_setup] do
+  task save_top_100_movies_to_db: [:environment] do
     # Task to fetch details of the top 100 movies from OMDB API and store them in the database
 
-    top_100_movies_imdb_id = [
+    top_movies_imdb_ids = [
       'tt0111161',  'tt23849204', 'tt0068646', 'tt0468569', 'tt0167260',
       'tt0108052',  'tt0071562',  'tt0050083', 'tt0120737', 'tt0110912',
       'tt1375666',  'tt0137523',  'tt0109830', 'tt0167261', 'tt0060196',
@@ -169,82 +31,98 @@ namespace :omdb do
     ]
 
     ActiveRecord::Base.transaction do
-      top_100_movies_imdb_id.each do |imdb_id|
-        puts "Searching imdb id:#{imdb_id} using OMDB api..."
-        response = fetch_movie_details(imdb_id)
+      top_movies_imdb_ids.each do |imdb_id|
+        begin
+          response = fetch_movie_details_with_retry(imdb_id)
 
-        # Extracting movie details from the API response
-        actors = response['Actors'].split(', ')
-        awards = response['Awards']
-        box_office = response['BoxOffice']
-        countries = response['Country'].split(', ')
-        directors = response['Director'].split(', ')
-        dvd_release = response['DVD']
-        genres = response['Genre'].split(', ')
-        imdb_rating = response['imdbRating']
-        imdb_votes = response['imdbVotes']
-        imdb_id = response['imdbID']
-        languages = response['Language'].split(', ')
-        metascore = response['Metascore']
-        plot = response['Plot']
-        production = response['Production']
-        poster = response['Poster']
-        rated = response['Rated']
-        ratings = response['Ratings']
-        released = response['Released']
-        runtime = response['Runtime']
-        title = response['Title']
-        website = response['Website']
-        writers = response['Writer'].split(', ')
-        year = response['Year']
+          # Extracting movie details from the API response
+          movie_params = extract_movie_params(response)
 
-        # Creating a new Movie object and saving it to the database
-        movie = Movie.new
+          # Creating a new Movie object and saving it to the database with nested attributes
+          Movie.create!(movie_params)
 
-        movie.awards = awards
-        movie.box_office = box_office
-        movie.dvd_release = dvd_release
-        movie.imdb_rating = imdb_rating
-        movie.imdb_votes = imdb_votes
-        movie.id = imdb_id
-        movie.metascore = metascore
-        movie.plot = plot
-        movie.production = production
-        movie.poster = poster
-        movie.rated = rated
-        movie.released = released
-        movie.runtime = runtime
-        movie.title = title
-        movie.website = website
-        movie.year = year
-
-        # Calling methods to save related details to the database
-        save_actors(actors, imdb_id)
-        save_countries(countries, imdb_id)
-        save_directors(directors, imdb_id)
-        save_genres(genres, imdb_id)
-        save_languages(languages, imdb_id)
-        save_ratings(ratings, imdb_id)
-        save_writers(writers, imdb_id)
-
-        # Saving the Movie object
-        movie.save
-
-        puts "\n ************************************************ \n"
+          puts "\n ************************************************ \n"
+        rescue StandardError => e
+          puts "Error while processing imdb id: #{imdb_id}. #{e.message}"
+          # Log the error or handle it as needed
+        end
       end
     end
   end
 
-  # Rake task to set up OMDB API base URL and key
-  desc 'OMDB base URL and API key setup for environment'
-  task omdb_api_setup: :environment do
-    # Task to set up OMDB API base URL and key in the environment
+  # Method to fetch movie details from the OMDB API with retry logic
+  #
+  # @param imdb_id [String] The IMDB ID of the movie to fetch details for
+  # @param max_retries [Integer] The maximum number of retries in case of errors
+  # @return [Hash] Hash containing movie details
+  def fetch_movie_details_with_retry(imdb_id, max_retries = 3)
+    retries = 0
 
-    api_key = "1f724ce8"
-    base_url = "http://www.omdbapi.com/"
+    begin
+      fetch_movie_details(imdb_id)
+    rescue StandardError => e
+      retries += 1
+      if retries <= max_retries
+        puts "Error fetching details for imdb id: #{imdb_id}. Retrying (#{retries}/#{max_retries})..."
+        sleep(5) # Add a delay before retrying to avoid rate limiting issues
+        retry
+      else
+        puts "Max retries reached. Unable to fetch details for imdb id: #{imdb_id}. Error: #{e.message}"
+        raise
+      end
+    end
+  end
 
-    ENV['api_url'] = "#{base_url}?apikey=#{api_key}"
+  # Method to fetch movie details from the OMDB API
+  #
+  # @param imdb_id [String] The IMDB ID of the movie to fetch details for
+  # @return [Hash] Hash containing movie details
+  def fetch_movie_details(imdb_id)
+    omdb_api_url = ENV['OMDB_API_URL']
+    url_params = URI.encode_www_form(i: imdb_id)
 
-    puts "OMDB API Base URL created."
+    url = "#{omdb_api_url}&#{url_params}"
+    uri = URI.parse(url)
+
+    puts "Searching imdb id: #{imdb_id} using OMDB api..."
+    response = Net::HTTP.get_response(uri)
+
+    unless response.is_a?(Net::HTTPSuccess)
+      raise StandardError, "Failed to fetch details for imdb id: #{imdb_id}. HTTP Response: #{response.code} #{response.message}"
+    end
+
+    JSON.parse(response.body)
+  end
+
+  # Method to extract movie parameters from the API response
+  #
+  # @param response [Hash] API response containing movie details
+  # @return [Hash] Extracted movie parameters
+  def extract_movie_params(response)
+    {
+      awards: response['Awards'],
+      box_office: response['BoxOffice'],
+      dvd_release: response['DVD'],
+      imdb_rating: response['imdbRating'],
+      imdb_votes: response['imdbVotes'],
+      id: response['imdbID'],
+      metascore: response['Metascore'],
+      plot: response['Plot'],
+      production: response['Production'],
+      poster: response['Poster'],
+      rated: response['Rated'],
+      released: response['Released'],
+      runtime: response['Runtime'],
+      title: response['Title'],
+      website: response['Website'],
+      year: response['Year'],
+      movie_actors_attributes: response['Actors'].split(', ').map { |actor| { name: actor } },
+      movie_countries_attributes: response['Country'].split(', ').map { |country| { country: country } },
+      movie_directors_attributes: response['Director'].split(', ').map { |director| { name: director } },
+      movie_genres_attributes: response['Genre'].split(', ').map { |genre| { genre: genre } },
+      movie_languages_attributes: response['Language'].split(', ').map { |language| { language: language } },
+      movie_ratings_attributes: response['Ratings'].map { |rating| { source: rating['Source'], value: rating['Value'] } },
+      movie_writers_attributes: response['Writer'].split(', ').map { |writer| { name: writer } }
+    }
   end
 end
