@@ -8,12 +8,10 @@ Bundler.require(*Rails.groups)
 
 module RailsOmdb
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
+    # Initialize configuration defaults for Rails 7.0.
     config.load_defaults 7.0
 
-    # Please, add to the `ignore` list any other `lib` subdirectories that do
-    # not contain `.rb` files, or that should not be reloaded or eager loaded.
-    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    # Add the 'lib' subdirectory to the autoload paths.
     config.autoload_paths << Rails.root.join('lib')
 
     # Configuration for the application, engines, and railties goes here.
@@ -22,6 +20,19 @@ module RailsOmdb
     # in config/environments, which are processed later.
     #
     # config.time_zone = "Central Time (US & Canada)"
+
+    # Uncomment and add eager load paths if needed.
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Configure Rack::Cors middleware for handling Cross-Origin Resource Sharing (CORS).
+    config.middleware.use Rack::Cors do
+      allow do
+        origins '*' # Allow requests from any origin.
+        resource '*',
+          headers: :any,
+          expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'],
+          methods: [:get, :post, :options, :delete, :put]
+      end
+    end
   end
 end
