@@ -26,14 +26,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_19_112500) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "favorite_movie_notifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "movie_id"
-    t.integer "user_id"
-    t.string "message"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "movie_actors", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "movie_id"
