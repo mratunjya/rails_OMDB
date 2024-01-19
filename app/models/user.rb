@@ -9,4 +9,5 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   has_many :favorite_movies
+  has_many :favorite_movie_notifications
 end
