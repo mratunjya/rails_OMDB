@@ -1,4 +1,7 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  mount Sidekiq::Web => '/sidekiq'
   # Devise Token Auth routes for User authentication
   # Generates authentication routes like /auth/sign_in, /auth/sign_out, etc.
   mount_devise_token_auth_for 'User', at: 'auth'

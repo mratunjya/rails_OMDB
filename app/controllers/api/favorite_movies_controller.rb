@@ -24,14 +24,14 @@ class Api::FavoriteMoviesController < ApplicationController
             # Check if the movie is already in the user's favorites.
             if user.favorite_movies.exists?(movie_id: movie.id)
                 # If the movie is in favorites, find the associated record and delete it.
-                favourite_movie = user.favorite_movies.find_by(movie_id: movie.id)
+                favorite_movie = user.favorite_movies.find_by(movie_id: movie.id)
 
-                if favourite_movie.destroy
+                if favorite_movie.destroy
                     # Provide a success message if the deletion is successful.
-                    render json: { message: "Deleted Movie from user's favorites" }
+                    render json: { message: "Deleted #{movie.title} from user's favorites" }
                 else
                     # Handle errors if deletion fails.
-                    render json: { error: "Failed to delete Movie from user's favorites", details: favourite_movie.errors.full_messages }, status: :bad_request
+                    render json: { error: "Failed to delete #{movie.title} from user's favorites", details: favorite_movie.errors.full_messages }, status: :bad_request
                 end
             else
                 # If the movie is not in favorites, create a new record to add it.
@@ -42,10 +42,10 @@ class Api::FavoriteMoviesController < ApplicationController
 
                 if user.favorite_movies.create!(favorite_movies_attributes)
                     # Provide a success message if the creation is successful.
-                    render json: { message: "Added Movie to user's favorites" }
+                    render json: { message: "Added #{movie.title} to user's favorites" }
                 else
                     # Handle errors if creation fails.
-                    render json: { error: "Failed to add Movie to user's favorites", details: user.favorite_movies.last.errors.full_messages }, status: :bad_request
+                    render json: { error: "Failed to add #{movie.title} to user's favorites", details: user.favorite_movies.last.errors.full_messages }, status: :bad_request
                 end
             end
         rescue ActiveRecord::RecordNotFound => e
