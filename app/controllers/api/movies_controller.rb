@@ -1,4 +1,8 @@
 class Api::MoviesController < ApplicationController
+  # Ensures that only authenticated users can access the movie-related endpoints.
+  before_action :authenticate_user!
+
+
   # GET /api/movies
   # Retrieves a list of movies based on specified parameters.
   def index
@@ -27,12 +31,12 @@ class Api::MoviesController < ApplicationController
   private
 
   # Generates a wildcard string for SQL LIKE queries.
-  def wildcard_string_generator(str)
-    str = str&.strip
+  def wildcard_string_generator(param)
+    param = param&.strip
 
-    return "%" if str.nil? || str.empty?
+    return "%" if param.nil? || param.empty?
 
-    "%#{str.split('').join('%')}%"
+    "%#{param.split('').join('%')}%"
   end
 
   # Prepare the output JSON using a concise format
