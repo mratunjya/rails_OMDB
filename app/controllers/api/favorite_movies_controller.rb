@@ -27,8 +27,6 @@ class Api::FavoriteMoviesController < ApplicationController
                 favorite_movie = user.favorite_movies.find_by(movie_id: movie.id)
 
                 if favorite_movie.destroy
-                    # Saving the new notification to Favorite Movie Notification
-                    SendToggleFavoriteNotificationToUser.perform_async(movie.id, user.id, "You have marked unmarked #{movie.title} as your favorite movie")
                     # Provide a success message if the deletion is successful.
                     render json: { message: "Deleted #{movie.title} from user's favorites" }
                 else
@@ -43,8 +41,6 @@ class Api::FavoriteMoviesController < ApplicationController
                 }
 
                 if user.favorite_movies.create!(favorite_movies_attributes)
-                    # Saving the new notification to Favorite Movie Notification
-                    SendToggleFavoriteNotificationToUser.perform_async(movie.id, user.id, "You have marked #{movie.title} as your favorite movie")
                     # Provide a success message if the creation is successful.
                     render json: { message: "Added #{movie.title} to user's favorites" }
                 else
