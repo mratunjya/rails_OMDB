@@ -3,7 +3,7 @@ source "https://rubygems.org"
 ruby "3.3.0"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.1.2"
+gem 'rails', '7.0.8'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
@@ -47,12 +47,32 @@ gem "bootsnap", require: false
 # Devise is a flexible authentication solution for Rails
 gem 'devise'
 
+gem 'devise_token_auth'
+
+gem 'rack-cors', :require => 'rack/cors'
+
+gem "sidekiq", "~> 7.2"
+
+gem "base64", "~> 0.2.0"
+
+gem "bigdecimal", "~> 3.1"
+
+gem "mutex_m", "~> 0.2.0"
 # Saas - Syntactically Awesome Stylesheets
 gem "sass-rails", "~> 6.0"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ]
+
+  gem "byebug", "~> 11.1"
+
+  # rspec-rails brings the RSpec testing framework to Ruby on Rails as a drop-in alternative to its default testing framework, Minitest.
+  gem 'rspec-rails', '~> 6.1.0'
+
+  # factory_bot_rails provides integration between factory_bot and rails 5.0 or newer
+  gem "factory_bot_rails", "~> 6.4"
+  gem 'faker'
 end
 
 group :development do
