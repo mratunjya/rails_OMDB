@@ -2,10 +2,8 @@
 
 one:
   awards: MyString
-  imdb_id: MyString
   imdb_rating: MyString
   imdb_votes: MyString
-  media_type: MyString
   metascore: MyString
   plot: MyText
   poster: MyText
@@ -13,15 +11,16 @@ one:
   released: MyString
   runtime: MyString
   title: MyString
-  total_seasons: MyString
   year: 1
+  box_office: MyString
+  dvd_release: MyString
+  production: MyString
+  website: MyString
 
 two:
   awards: MyString
-  imdb_id: MyString
   imdb_rating: MyString
   imdb_votes: MyString
-  media_type: MyString
   metascore: MyString
   plot: MyText
   poster: MyText
@@ -29,5 +28,8 @@ two:
   released: MyString
   runtime: MyString
   title: MyString
-  total_seasons: MyString
   year: 1
+  box_office: MyString
+  dvd_release: MyString
+  production: MyString
+  website: MyString

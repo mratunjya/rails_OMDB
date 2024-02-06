@@ -1,0 +1,2 @@
+class FavoriteMovieNotification < ApplicationRecord
+end
