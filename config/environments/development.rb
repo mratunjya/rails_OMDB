@@ -61,6 +61,7 @@ Rails.application.configure do
 
   # Suppress logger output for asset requests.
   config.assets.quiet = true
+  config.assets.debug = true
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
@@ -75,4 +76,8 @@ Rails.application.configure do
   # config.action_controller.raise_on_missing_callback_actions = true
 
   ENV['OMDB_API_URL'] = "http://www.omdbapi.com/?apikey=1f724ce8"
+
+  config.action_controller.raise_on_missing_callback_actions = true
+
+  config.action_mailer.default_url_options = { host: 'localhost', port: 4000 }
 end

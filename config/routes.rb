@@ -14,6 +14,12 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
+  root to: redirect("movies")
+
+  devise_for :users
+
+  resources :movies, only: [:index, :show]
+
   namespace :api do
     # Define movies resource with only the index action
     # This will create routes like /api/movies (GET)

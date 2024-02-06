@@ -1,0 +1,54 @@
+<div class="movies-wrapper">
+    <div class="movies-container">
+        <% if !@movies.nil? %>
+            <% @movies.each do |movie| %>
+            <%= link_to movie_path(id: movie[:id]) do %>
+                <div class="movie-card">
+                    <% if movie[:poster] != "N/A" %>
+                        <%= image_tag (movie[:poster]), draggable: false %>
+                    <% else %>
+                        <%= image_tag ("no-image.png"), class: "object-fit-contain", draggable: false %>
+                    <% end %>
+                    <div class="movie-details">
+                    <h3><%= movie[:title] %></h3>
+                    <h4>
+                        <% if movie[:released] != "N/A" %>
+                            Released on: <span class="f-w-500"><%= movie[:released] %></span> <br>
+                        <% end %>
+                        <% if movie[:media_type] != "N/A" %>
+                            Type:
+                            <span class="f-w-500"> <%= movie[:media_type] %>
+                                <% if movie[:media_type] == "series" %>
+                                - Total <%= movie[:total_seasons] %> <%= 'Season'.pluralize(movie[:total_seasons].to_i) %>
+                                <% end %>
+                            </span>
+                        <% end %>
+                    </h4>
+                    <div>
+                        <% if movie[:rated] != "N/A" %>
+                            <p><strong>Rated:</strong> <%= movie[:rated] %></p>
+                        <% end %>
+                        <% if movie[:runtime] != "N/A" %>
+                            <p><strong>Runtime:</strong> <%= movie[:runtime] %></p>
+                        <% end %>
+                    </div>
+                    <div>
+                        <p><strong>IMDB Ratings:</strong> <%= movie[:imdb_rating] %> / 10</p>
+                        <p><strong>IMDB Votes:</strong> <%= movie[:imdb_votes] %></p>
+                    </div>
+                    </div>
+                </div>
+            <% end %>
+            <% end %>
+        <% else %>
+            <div class="no-movies-wrapper">
+                <h1>No Movies Found</h1>
+                <%= link_to("Go to Movies Home", movies_path) %>
+            </div>
+        <% end %>
+    </div>
+    <div class="pagination-buttons">
+        <%= link_to("Previous", movies_path(page: @prev_page, title: @title, released: @released, genre: @genre, actor: @actor)) if @prev_page %>
+        <%= link_to("Next", movies_path(page: @next_page, title: @title, released: @released, genre: @genre, actor: @actor)) if @next_page %>
+    </div>
+<div>

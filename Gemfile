@@ -58,6 +58,8 @@ gem "base64", "~> 0.2.0"
 gem "bigdecimal", "~> 3.1"
 
 gem "mutex_m", "~> 0.2.0"
+# Saas - Syntactically Awesome Stylesheets
+gem "sass-rails", "~> 6.0"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
