@@ -1,0 +1,57 @@
+require 'rails_helper'
+
+describe "Api::FavoriteMovies", type: :request do
+  let!(:user) { create(:user) }
+  let!(:auth_headers) { user.create_new_auth_token }
+  let!(:movie_list) { create_list(:movie, 100) }
+
+  describe "GET /api/favorite_movies" do
+    subject(:get_favorite_movies_without_headers) { get "/api/favorite_movies" }
+    subject(:get_favorite_movies) { get "/api/favorite_movies", headers: auth_headers }
+
+    context "when the user is not signed in" do
+      it "should be unauthorized access" do
+        get_favorite_movies_without_headers
+
+        expect(response).to be_unauthorized
+      end
+    end
+
+    context "when the user is signed in" do
+      it "should give no favorite movie titles when user has no favorite movies" do
+        get_favorite_movies
+
+        expect(response).to be_successful
+        expect(JSON.parse(response.body)["movie_titles"].length).to eq(0)
+      end
+
+      it "adds 10 movies to the user's favorite list and check if all are there in favorite movies" do
+
+        unique_random_movie_indexes = Set[]
+
+        while unique_random_movie_indexes.length < 10
+          unique_random_movie_indexes.add(rand(0...100))
+        end
+
+        unique_random_movie_indexes.each do |index|
+          toggle_favorite_movie(movie_list[index].id)
+        end
+
+        get_favorite_movies
+        expect(response).to be_successful
+
+        expected_movie_titles = unique_random_movie_indexes.map do |index|
+          movie_list[index].title
+        end
+
+        response_movie_titles = JSON.parse(response.body)["movie_titles"]
+
+        expect(expected_movie_titles).to eq(response_movie_titles)
+      end
+    end
+  end
+
+  def toggle_favorite_movie(movie_id)
+    post "/api/favorite_movies/toggle_favorite", params: { movie_id: movie_id }, headers: auth_headers
+  end
+end
