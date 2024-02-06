@@ -1,4 +1,7 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  mount Sidekiq::Web => '/sidekiq'
   # Devise Token Auth routes for User authentication
   # Generates authentication routes like /auth/sign_in, /auth/sign_out, etc.
   mount_devise_token_auth_for 'User', at: 'auth'
@@ -15,6 +18,12 @@ Rails.application.routes.draw do
     # Define movies resource with only the index action
     # This will create routes like /api/movies (GET)
     resources :movies,  only: [:index]
-  end
 
+    # Define favorite_movies resource with only the index, toggle_favorite action
+    # This will create routes like /api/favorite_movies (GET)
+    #                              /api/favorite_movies/toggle_favorite (POST)
+    resources :favorite_movies, only: [:index] do
+      post 'toggle_favorite', on: :collection
+    end
+  end
 end
