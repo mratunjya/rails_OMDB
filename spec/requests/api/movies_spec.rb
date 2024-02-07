@@ -95,11 +95,6 @@ describe "Api::Movies", type: :request do
     end
   end
 
-  # Cleaning up the created movies after each test
-  after do
-    movie_list.each(&:destroy)
-  end
-
   # Helper method to verify the movie list returned in the response
   def verify_movie_list(page_number, movies_length = 8)
     response_body = JSON.parse(response.body)
