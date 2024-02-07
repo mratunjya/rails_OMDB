@@ -40,16 +40,5 @@ FactoryBot.define do
             create_list(:movie_rating, evaluator.ratings_count, movie: movie)
             create_list(:movie_writer, evaluator.writers_count, movie: movie)
         end
-
-        after(:destroy) do |movie|
-            # Destroy associated records after destroying a movie
-            movie.movie_actors.destroy_all
-            movie.movie_countries.destroy_all
-            movie.movie_directors.destroy_all
-            movie.movie_genres.destroy_all
-            movie.movie_languages.destroy_all
-            movie.movie_ratings.destroy_all
-            movie.movie_writers.destroy_all
-        end
     end
 end

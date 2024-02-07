@@ -10,70 +10,81 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_07_102607) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_07_121002) do
   create_table "favorite_movie_notifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.integer "movie_id"
-    t.integer "user_id"
+    t.bigint "movie_id"
+    t.bigint "user_id"
     t.string "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "fk_rails_6d44c31d33"
+    t.index ["user_id"], name: "fk_rails_736d3cbb3d"
   end
 
   create_table "favorite_movies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "movie_id"
+    t.bigint "user_id"
+    t.bigint "movie_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "fk_rails_4d22931adc"
+    t.index ["user_id"], name: "fk_rails_e5afd0a893"
   end
 
   create_table "movie_actors", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
-    t.integer "movie_id"
+    t.bigint "movie_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "fk_rails_a2d0458e32"
   end
 
   create_table "movie_countries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "country"
-    t.integer "movie_id"
+    t.bigint "movie_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "fk_rails_70855895bf"
   end
 
   create_table "movie_directors", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
-    t.integer "movie_id"
+    t.bigint "movie_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "fk_rails_94f5f02833"
   end
 
   create_table "movie_genres", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "genre"
-    t.integer "movie_id"
+    t.bigint "movie_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "fk_rails_e153f3c39b"
   end
 
   create_table "movie_languages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "language"
-    t.integer "movie_id"
+    t.bigint "movie_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "fk_rails_005b3b00d8"
   end
 
   create_table "movie_ratings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "source"
     t.string "value"
-    t.integer "movie_id"
+    t.bigint "movie_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "fk_rails_e27a2e7bbc"
   end
 
   create_table "movie_writers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
-    t.integer "movie_id"
+    t.bigint "movie_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "fk_rails_8fa1465cab"
   end
 
   create_table "movies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -120,4 +131,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_07_102607) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "favorite_movie_notifications", "movies"
+  add_foreign_key "favorite_movie_notifications", "users"
+  add_foreign_key "favorite_movies", "movies"
+  add_foreign_key "favorite_movies", "users"
+  add_foreign_key "movie_actors", "movies"
+  add_foreign_key "movie_countries", "movies"
+  add_foreign_key "movie_directors", "movies"
+  add_foreign_key "movie_genres", "movies"
+  add_foreign_key "movie_languages", "movies"
+  add_foreign_key "movie_ratings", "movies"
+  add_foreign_key "movie_writers", "movies"
 end
